@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.powernode.model.dao.IStudentDao">
+  <resultMap id="BaseResultMap" type="com.powernode.entity.Student">
+    <id column="stu_id" jdbcType="INTEGER" property="stuId" />
+    <result column="stu_name" jdbcType="VARCHAR" property="stuName" />
+    <result column="stu_sex" jdbcType="INTEGER" property="stuSex" />
+    <result column="stu_status" jdbcType="INTEGER" property="stuStatus" />
+    <result column="tea_id" jdbcType="INTEGER" property="teaId" />
+    <result column="tea-name" jdbcType="INTEGER" property="teacher.teaName" />
+  </resultMap>
+  <!--把查询学生类里面的教师id查询出来以便修改（edit.jsp）的时候和学生对应的教师id进行对比-->
+  <sql id="Base_Column_List">
+    stu_id, stu_name, stu_sex, stu_status,tea_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_student
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+   s.stu_id,s.stu_name,s.stu_sex,s.stu_status,s.tea_id,t.tea_name
+    from t_student s
+    left  join t_teacher t on  s.tea_id=t.tea_id
+  </select>
+
+  <select id="selectByPager" resultMap="BaseResultMap">
+    select
+   s.stu_id,s.stu_name,s.stu_sex,s.stu_status,s.tea_id,t.tea_name
+    from t_student s
+    left  join t_teacher t on  s.tea_id=t.tea_id
+    limit #{skipNo},#{pageNo}
+  </select>
+
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_student
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="stu_id" keyProperty="stuId" parameterType="com.powernode.entity.Student" useGeneratedKeys="true">
+    insert into t_student (stu_name, stu_sex, stu_status,tea_id
+      )
+    values (#{stuName,jdbcType=VARCHAR}, #{stuSex,jdbcType=INTEGER}, #{stuStatus,jdbcType=INTEGER}, #{teaId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="stu_id" keyProperty="stuId" parameterType="com.powernode.entity.Student" useGeneratedKeys="true">
+    insert into t_student
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stuName != null">
+        stu_name,
+      </if>
+      <if test="stuSex != null">
+        stu_sex,
+      </if>
+      <if test="stuStatus != null">
+        stu_status,
+      </if>
+      <if test="teaId != null">
+        tea_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stuName != null">
+        #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuSex != null">
+        #{stuSex,jdbcType=INTEGER},
+      </if>
+      <if test="stuStatus != null">
+        #{stuStatus,jdbcType=INTEGER},
+      </if>
+      <if test="teaId != null">
+        #{teaId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.powernode.entity.Student">
+    update t_student
+    <set>
+      <if test="stuName != null">
+        stu_name = #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuSex != null">
+        stu_sex = #{stuSex,jdbcType=INTEGER},
+      </if>
+      <if test="stuStatus != null">
+        stu_status = #{stuStatus,jdbcType=INTEGER},
+      </if>
+      <if test="teaId != null">
+        tea_id = #{teaId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.powernode.entity.Student">
+    update t_student
+    set stu_name = #{stuName,jdbcType=VARCHAR},
+      stu_sex = #{stuSex,jdbcType=INTEGER},
+      stu_status = #{stuStatus,jdbcType=INTEGER},
+       tea_id = #{teaId,jdbcType=INTEGER}
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </update>
+</mapper>

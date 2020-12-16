@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+">
+    <!--  设置注解扫描路径 扫描controller-->
+    <context:component-scan base-package="com.powernode.controller"/>
+
+    <!-- 打开springmvc映射器和适配器 -->
+    <mvc:annotation-driven/>
+    <!-- 配置静态资源的解析 -->
+
+    <!-- 以下路径不会被当控制器拦截，当静态资源处理
+    <mvc:resources mapping="/images/**" location="/images/" />
+    <mvc:resources mapping="/css/**" location="/css/" />
+    <mvc:resources mapping="/js/**" location="/js/" />-->
+
+    <!--  /images/*  父目录是 /images/的，例如: /images/a.jpg， /images/timg.jpg
+
+         /images/**  祖先目录是 /images/的，例如: /images/a.jpg，/images/a/b.jpg,/images/a/b/c/d/e/f/a.jpg
+
+         换句话表述就是：所有以/images/打头的请求
+
+       -->
+    <!-- 由springmvc对请求进行分类，如果是静态资源，则交给DefaultServlet处理 -->
+    <mvc:default-servlet-handler/>
+    <!-- 对模型视图名称的解析，即在模型视图名称添加前pages后缀 .jsp-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/pages/" p:suffix=".jsp"/>
+
+    <!-- 拦截器配置 -->
+    <mvc:interceptors>
+
+        <!-- 多个拦截器将顺序执行 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/> <!-- 拦截路径 -->
+            <mvc:exclude-mapping path="/login"/><!-- 不拦截路径 -->
+            <mvc:exclude-mapping path="/saveLogin"/><!-- 不拦截路径 -->
+
+            <bean class="com.powernode.util.LoginInterceptor
+"></bean>
+        </mvc:interceptor>
+
+    </mvc:interceptors>
+
+</beans>

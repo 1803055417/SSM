@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <!--源代码编码后变成class文件，所以有classpath -->
+        <param-value>/WEB-INF/applicationContext.xml,classpath:spring-datasource.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+<!--给css、js、images开头的放行-->
+   <servlet-mapping>
+       <servlet-name>default</servlet-name>
+
+       <url-pattern>/css/*</url-pattern>
+       <url-pattern>/js/*</url-pattern>
+       <url-pattern>/images/*</url-pattern>
+    <!--
+       <url-pattern>*.css</url-pattern>
+          <url-pattern>*.js</url-pattern>
+          <url-pattern>*.png</url-pattern>
+          <url-pattern>*.jpg</url-pattern>
+          <url-pattern>*.jpeg</url-pattern>-->
+      </servlet-mapping>
+    <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+       <!-- <load-on-startup>1</load-on-startup>-->
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/</url-pattern> <!-- 将所有的请求引导至DispatcherServlet来处理(*.jsp除外) -->
+    </servlet-mapping>
+    <!-- 配置过滤器
+   <filter>
+       <filter-name>CharacterEncodingFilter</filter-name>
+       <filter-class>com.powernode.util.CharacterEncodingFilter</filter-class>
+   </filter>
+
+   <filter-mapping>
+       <filter-name>CharacterEncodingFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+       <servlet-name>dispatcher</servlet-name>
+
+   </filter-mapping>
+       -->
+    <!-- 配置过滤器-->
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <!--拦截规则  拦截servlet 名字是dispatcher-->
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <servlet-name>dispatcher</servlet-name>
+    </filter-mapping>
+</web-app>
